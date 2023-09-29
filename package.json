@@ -7,6 +7,7 @@
     "webpack": "webpack",
     "start": "electron-forge start",
     "package": "electron-forge package",
+    "premake": "webpack --config webpack.config.prod.js",
     "make": "electron-forge make"
   },
   "author": "Awake",
