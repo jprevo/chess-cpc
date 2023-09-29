@@ -1,0 +1,23 @@
+@font-face {
+  font-family: "Nunito";
+  src: url("../font/NunitoSans_7pt-Regular.ttf") format("truetype");
+}
+
+body,
+html {
+  background: #004040;
+  color: #bfbe9c;
+  font-family: Nunito;
+}
+
+a {
+  color: #00BFAE;
+}
+
+#board {
+  width: 750px;
+}
+
+main {
+  display: flex;
+}
