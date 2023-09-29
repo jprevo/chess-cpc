@@ -1,8 +1,16 @@
+import { Card } from "./card/card";
+
 declare global {
   interface Window {
     Chessboard: ChessBoard;
   }
 }
+
+export type CardsIndex = {
+  [id: string]: Card;
+};
+
+export type CardInstance = { new (): Card } & typeof Card;
 
 export enum GameMode {
   Ai,

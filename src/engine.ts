@@ -1,17 +1,29 @@
 import { BoardConfig, ChessBoardInstance, GameMode } from "./types";
 import { BLACK, WHITE, Chess } from "chess.js";
+import { Card } from "./card/card";
+import { Cards } from "./cards";
 
 export class Engine {
-  protected board: ChessBoardInstance | null = null;
-  protected fish: Worker | null = null;
-  protected game: Chess;
+  protected _board: ChessBoardInstance | null = null;
+  protected _fish: Worker | null = null;
+  protected _game: Chess;
 
   public constructor(protected mode: GameMode = GameMode.Ai) {
     if (this.mode === GameMode.Ai) {
       this.initFish();
     }
 
-    this.game = new Chess();
+    this._game = new Chess();
+  }
+
+  async playCard(id: string): Promise<void> {
+    const card: Card | null = Cards[id];
+
+    if (!card) {
+      return;
+    }
+
+    return card.play(this);
   }
 
   next(): void {
@@ -62,14 +74,21 @@ export class Engine {
   }
 
   protected initFish(): void {
-    this.fish = new Worker("js/stockfish.js");
-    this.fish.postMessage("uci");
+    this._fish = new Worker("js/stockfish.js");
 
-    this.fish.addEventListener("message", (e: MessageEvent) => {
-      const msg: string = e.data;
+    const fish: Worker | null = this.fish;
 
-      if (msg && msg.startsWith("bestmove")) {
-        const parts: string[] = msg.split(" ");
+    if (!fish) {
+      return;
+    }
+
+    fish.postMessage("uci");
+
+    fish.addEventListener("message", (e: MessageEvent) => {
+      const message: string = e.data;
+
+      if (message && message.startsWith("bestmove")) {
+        const parts: string[] = message.split(" ");
 
         if (parts.length < 2) {
           return this.playRandomAi();
@@ -166,6 +185,18 @@ export class Engine {
     this.next();
   }
 
+  get game(): Chess {
+    return this._game;
+  }
+
+  get board(): ChessBoardInstance | null {
+    return this._board;
+  }
+
+  get fish(): Worker | null {
+    return this._fish;
+  }
+
   public start(domId: string): void {
     const config: BoardConfig = {
       draggable: true,
@@ -175,6 +206,6 @@ export class Engine {
       onSnapEnd: this.onSnapEnd.bind(this),
     };
 
-    this.board = window.Chessboard(domId, config);
+    this._board = window.Chessboard(domId, config);
   }
 }

@@ -1,6 +1,9 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("node:path");
 
+// Squirrel is auto update stuff
+// difficult to disable for some reason
+
 if (handleSquirrelEvent()) {
   return;
 }
@@ -61,9 +64,15 @@ const createWindow = () => {
       preload: path.join(__dirname, "preload.js"),
     },
   });
+
   mainWindow.removeMenu();
-  mainWindow.loadFile("html/index.html");
-  mainWindow.webContents.openDevTools();
+  mainWindow.setResizable(false);
+
+  if (!app.isPackaged) {
+    mainWindow.webContents.openDevTools();
+  }
+
+  return mainWindow.loadFile("html/index.html");
 };
 
 app.whenReady().then(() => {
