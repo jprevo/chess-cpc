@@ -41,7 +41,10 @@ sayan.addEventListener("click", () => {
     });
   });
 
-  board.position(game.fen());
+  const fen = game.fen();
+  game.load(fen);
+
+  board.position(fen, false);
 });
 
 if (mode === "ai") {

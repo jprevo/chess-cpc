@@ -32,6 +32,10 @@ main {
   animation: party2 5s infinite;
 }
 
+#board.party [data-piece] {
+  animation: rotation 3s infinite linear;
+}
+
 @keyframes party {
   0% {background-color: red;}
   25% {background-color: orange;}
@@ -46,4 +50,13 @@ main {
   50% {background-color: red;}
   75% {background-color: green;}
   100% {background-color: pink;}
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
 }

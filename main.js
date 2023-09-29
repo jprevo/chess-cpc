@@ -62,7 +62,7 @@ const createWindow = () => {
     },
   });
   mainWindow.removeMenu();
-  mainWindow.loadFile("index.html");
+  mainWindow.loadFile("html/index.html");
   mainWindow.webContents.openDevTools();
 };
 
