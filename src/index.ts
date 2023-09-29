@@ -5,14 +5,19 @@ const engine: Engine = new Engine(GameMode.Ai);
 
 document.addEventListener("DOMContentLoaded", () => {
   engine.start("board");
-  engine.playCard("party");
+
+  const party: HTMLElement | null = document.getElementById("party-mode");
+
+  if (party) {
+    party.addEventListener("click", (e: MouseEvent) => {
+      e.preventDefault();
+
+      return engine.playCard("party");
+    });
+  }
 });
 
 /*
-party.addEventListener("click", (e: MouseEvent) => {
-  e.preventDefault();
-  document.getElementById("board").classList.toggle("party");
-});
 
 sayan.addEventListener("click", (e: MouseEvent) => {
   e.preventDefault();

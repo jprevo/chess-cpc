@@ -6,11 +6,13 @@ declare global {
   }
 }
 
-export type CardsIndex = {
-  [id: string]: Card;
+export type CardConstructor = {
+  new (): Card;
 };
 
-export type CardInstance = { new (): Card } & typeof Card;
+export type CardsIndex = {
+  [id: string]: CardConstructor;
+};
 
 export enum GameMode {
   Ai,

@@ -1,12 +1,19 @@
-import { BoardConfig, ChessBoardInstance, GameMode } from "./types";
+import {
+  BoardConfig,
+  CardConstructor,
+  ChessBoardInstance,
+  GameMode,
+} from "./types";
 import { BLACK, WHITE, Chess } from "chess.js";
-import { Card } from "./card/card";
 import { Cards } from "./cards";
+import { Card } from "./card/card";
 
 export class Engine {
   protected _board: ChessBoardInstance | null = null;
   protected _fish: Worker | null = null;
   protected _game: Chess;
+
+  playedCards: Card[] = [];
 
   public constructor(protected mode: GameMode = GameMode.Ai) {
     if (this.mode === GameMode.Ai) {
@@ -17,11 +24,15 @@ export class Engine {
   }
 
   async playCard(id: string): Promise<void> {
-    const card: Card | null = Cards[id];
+    const cardClass: CardConstructor | null = Cards[id];
 
-    if (!card) {
+    if (!cardClass) {
       return;
     }
+
+    const card = new cardClass();
+
+    this.playedCards.push(card);
 
     return card.play(this);
   }
@@ -195,6 +206,10 @@ export class Engine {
 
   get fish(): Worker | null {
     return this._fish;
+  }
+
+  get boardElement(): HTMLElement | null {
+    return document.getElementById("board");
   }
 
   public start(domId: string): void {
