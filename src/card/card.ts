@@ -1,4 +1,5 @@
 import { Engine } from "../engine";
+import { CardLevel } from "../types";
 
 export abstract class Card {
   public static readonly id: string = "abstract";
@@ -11,5 +12,9 @@ export abstract class Card {
     return "Unknown";
   }
 
-  abstract play(engine: Engine): Promise<void>;
+  get level(): CardLevel {
+    return CardLevel.Good;
+  }
+
+  abstract play(engine: Engine): Promise<boolean>;
 }

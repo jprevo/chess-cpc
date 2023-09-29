@@ -6,6 +6,35 @@ declare global {
   }
 }
 
+export interface EngineConfig {
+  mode?: GameMode;
+  domId?: string;
+  deckId?: string;
+}
+
+export enum CardFace {
+  ackboo = "ackboo",
+  chat = "chat",
+  denis = "denis",
+  ellen = "ellen",
+  furolith = "furolith",
+  ivan = "ivan",
+  izual = "izual",
+  sebum = "sebum",
+  sonia = "sonia",
+  soupape = "soupape",
+  toto = "toto",
+}
+
+export enum CardLevel {
+  VeryBad,
+  Bad,
+  Chaos,
+  Skin,
+  Good,
+  VeryGood,
+}
+
 export type CardConstructor = {
   new (): Card;
 };
@@ -18,6 +47,12 @@ export enum GameMode {
   Ai,
   Vs,
 }
+
+export const defaultEngineConfig = {
+  mode: GameMode.Ai,
+  domId: "board",
+  deckId: "stack",
+};
 
 // Type definitions for chessboardjs 0.3
 // Project: https://github.com/oakmac/chessboardjs/, https://github.com/deanius/chessboardjs

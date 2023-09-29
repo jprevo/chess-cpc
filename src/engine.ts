@@ -1,37 +1,75 @@
 import {
   BoardConfig,
   CardConstructor,
+  CardFace,
+  CardLevel,
   ChessBoardInstance,
+  defaultEngineConfig,
+  EngineConfig,
   GameMode,
 } from "./types";
-import { BLACK, WHITE, Chess } from "chess.js";
+import { BLACK, WHITE, Chess, QUEEN } from "chess.js";
 import { Cards } from "./cards";
 import { Card } from "./card/card";
+import { CardDeck } from "./card-deck";
+import { QueensCard } from "./card/queens-card";
+import { PartyCard } from "./card/party-card";
 
 export class Engine {
-  protected _board: ChessBoardInstance | null = null;
+  protected _config: EngineConfig;
+  protected _board: ChessBoardInstance;
   protected _fish: Worker | null = null;
   protected _game: Chess;
+  protected _mode: GameMode;
 
+  deck: CardDeck;
+  faces: CardFace[] = [];
   playedCards: Card[] = [];
 
-  public constructor(protected mode: GameMode = GameMode.Ai) {
+  public constructor(config: EngineConfig) {
+    const engineConfig: EngineConfig = {
+      ...{},
+      ...defaultEngineConfig,
+      ...config,
+    };
+
+    this._config = engineConfig;
+    this._mode = engineConfig.mode as GameMode;
+
+    this._game = new Chess();
+
     if (this.mode === GameMode.Ai) {
       this.initFish();
     }
 
-    this._game = new Chess();
+    const boardConfig: BoardConfig = {
+      draggable: true,
+      position: this.game.fen(),
+      onDragStart: this.onDragStart.bind(this),
+      onDrop: this.onDrop.bind(this),
+      onSnapEnd: this.onSnapEnd.bind(this),
+    };
+
+    this._board = window.Chessboard(engineConfig.domId, boardConfig);
+
+    this.deck = new CardDeck(engineConfig.deckId as string, this);
+
+    setTimeout(() => {
+      return this.drawCard();
+    }, 1500);
   }
 
-  async playCard(id: string): Promise<void> {
-    const cardClass: CardConstructor | null = Cards[id];
+  async drawCard(): Promise<void> {
+    const card: QueensCard = new QueensCard();
 
-    if (!cardClass) {
-      return;
-    }
+    this.deck.draw(card).then(() => {
+      const partyCard: PartyCard = new PartyCard();
 
-    const card = new cardClass();
+      this.deck.draw(partyCard);
+    });
+  }
 
+  async playCard(card: Card): Promise<boolean> {
     this.playedCards.push(card);
 
     return card.play(this);
@@ -139,13 +177,13 @@ export class Engine {
     const move = moves[Math.floor(Math.random() * moves.length)];
     this.game.move(move);
 
-    onMoveMade();
+    this.onMovePlayed();
   }
 
   protected onDragStart(source?: string, piece?: string) {
     if (this.game.isGameOver()) return false;
 
-    if (this.game.turn() === BLACK && this.mode === GameMode.Ai) {
+    if (this.turn === BLACK && this.mode === GameMode.Ai) {
       return false;
     }
 
@@ -154,8 +192,8 @@ export class Engine {
     }
 
     if (
-      (this.game.turn() === WHITE && piece.search(/^b/) !== -1) ||
-      (this.game.turn() === BLACK && piece.search(/^w/) !== -1)
+      (this.turn === WHITE && piece.search(/^b/) !== -1) ||
+      (this.turn === BLACK && piece.search(/^w/) !== -1)
     ) {
       return false;
     }
@@ -174,13 +212,18 @@ export class Engine {
       this.game.move({
         from: source,
         to: target,
-        promotion: "q",
+        promotion: QUEEN,
       });
     } catch (e) {
       console.log(`Invalid move ${source} -> ${target}`);
 
       return "snapback";
     }
+  }
+
+  setPosition(fen: string) {
+    this.game.load(fen);
+    this.board.position(fen, false);
   }
 
   protected onSnapEnd(): void {
@@ -196,11 +239,15 @@ export class Engine {
     this.next();
   }
 
+  get turn(): string {
+    return this.game.turn();
+  }
+
   get game(): Chess {
     return this._game;
   }
 
-  get board(): ChessBoardInstance | null {
+  get board(): ChessBoardInstance {
     return this._board;
   }
 
@@ -208,19 +255,11 @@ export class Engine {
     return this._fish;
   }
 
-  get boardElement(): HTMLElement | null {
-    return document.getElementById("board");
+  get mode(): GameMode {
+    return this._mode;
   }
 
-  public start(domId: string): void {
-    const config: BoardConfig = {
-      draggable: true,
-      position: this.game.fen(),
-      onDragStart: this.onDragStart.bind(this),
-      onDrop: this.onDrop.bind(this),
-      onSnapEnd: this.onSnapEnd.bind(this),
-    };
-
-    this._board = window.Chessboard(domId, config);
+  get boardElement(): HTMLElement | null {
+    return document.getElementById("board");
   }
 }
