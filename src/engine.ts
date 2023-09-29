@@ -1,19 +1,16 @@
 import {
   BoardConfig,
-  CardConstructor,
   CardFace,
-  CardLevel,
   ChessBoardInstance,
   defaultEngineConfig,
   EngineConfig,
+  EngineState,
   GameMode,
 } from "./types";
-import { BLACK, WHITE, Chess, QUEEN } from "chess.js";
+import { BLACK, Chess, QUEEN, WHITE } from "chess.js";
 import { Cards } from "./cards";
 import { Card } from "./card/card";
 import { CardDeck } from "./card-deck";
-import { QueensCard } from "./card/queens-card";
-import { PartyCard } from "./card/party-card";
 
 export class Engine {
   protected _config: EngineConfig;
@@ -21,6 +18,7 @@ export class Engine {
   protected _fish: Worker | null = null;
   protected _game: Chess;
   protected _mode: GameMode;
+  protected _state: EngineState = EngineState.Draw;
 
   deck: CardDeck;
   faces: CardFace[] = [];
@@ -55,40 +53,50 @@ export class Engine {
     this.deck = new CardDeck(engineConfig.deckId as string, this);
 
     setTimeout(() => {
-      return this.drawCard();
-    }, 1500);
+      return this.next();
+    }, 500);
+  }
+
+  async next(): Promise<boolean> {
+    if (this.game.isGameOver()) {
+      this.afterNext();
+
+      return false;
+    }
+
+    if (this.mode === GameMode.Ai) {
+      if (this.game.turn() === BLACK && this._state === EngineState.Play) {
+        this.playAi();
+        this._state = EngineState.Draw;
+        this.afterNext();
+
+        return true;
+      }
+    }
+
+    if (this._state === EngineState.Draw) {
+      await this.drawCard();
+      this.afterNext();
+      this._state = EngineState.Play;
+
+      return this.next();
+    }
+
+    return false;
   }
 
   async drawCard(): Promise<void> {
-    const card: QueensCard = new QueensCard();
+    const ids: string[] = Object.keys(Cards);
+    const id: string = ids[Math.floor(Math.random() * ids.length)];
+    const card: Card = new Cards[id]();
 
-    this.deck.draw(card).then(() => {
-      const partyCard: PartyCard = new PartyCard();
-
-      this.deck.draw(partyCard);
-    });
+    return this.deck.draw(card);
   }
 
   async playCard(card: Card): Promise<boolean> {
     this.playedCards.push(card);
 
     return card.play(this);
-  }
-
-  next(): void {
-    if (this.game.isGameOver()) {
-      return this.afterNext();
-    }
-
-    if (this.mode === GameMode.Ai) {
-      if (this.game.turn() === BLACK) {
-        this.playAi();
-
-        return this.afterNext();
-      }
-    }
-
-    this.afterNext();
   }
 
   protected afterNext(): void {
@@ -183,6 +191,10 @@ export class Engine {
   protected onDragStart(source?: string, piece?: string) {
     if (this.game.isGameOver()) return false;
 
+    if (this._state !== EngineState.Play) {
+      return false;
+    }
+
     if (this.turn === BLACK && this.mode === GameMode.Ai) {
       return false;
     }
@@ -236,6 +248,7 @@ export class Engine {
     }
 
     this.board.position(this.game.fen());
+    this._state = EngineState.Draw;
     this.next();
   }
 

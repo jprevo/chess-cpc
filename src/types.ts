@@ -12,6 +12,11 @@ export interface EngineConfig {
   deckId?: string;
 }
 
+export enum EngineState {
+  Draw,
+  Play,
+}
+
 export enum CardFace {
   ackboo = "ackboo",
   chat = "chat",
