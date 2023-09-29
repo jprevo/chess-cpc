@@ -21,3 +21,29 @@ a {
 main {
   display: flex;
 }
+
+#board.party [data-square][class*=' black'] {
+  background: red;
+  animation: party 5s infinite;
+}
+
+#board.party [data-square][class*=' white'] {
+  background: red;
+  animation: party2 5s infinite;
+}
+
+@keyframes party {
+  0% {background-color: red;}
+  25% {background-color: orange;}
+  50% {background-color: pink;}
+  75% {background-color: cyan;}
+  100% {background-color: red;}
+}
+
+@keyframes party2 {
+  0% {background-color: pink;}
+  25% {background-color: cyan;}
+  50% {background-color: red;}
+  75% {background-color: green;}
+  100% {background-color: pink;}
+}

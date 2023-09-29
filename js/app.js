@@ -7,8 +7,42 @@ const game = new Chess();
 const status = document.getElementById("status");
 const whatsnext = document.getElementById("whatsnext");
 const sayan = document.getElementById("sayan-mode");
+const party = document.getElementById("party-mode");
 
-sayan.addEventListener("click", () => {});
+party.addEventListener("click", () => {
+  document.getElementById("board").classList.toggle("party");
+});
+
+sayan.addEventListener("click", () => {
+  const pieces = game.board();
+
+  pieces.forEach((line) => {
+    if (!line) {
+      return;
+    }
+
+    line.forEach((piece) => {
+      if (!piece) {
+        return;
+      }
+
+      if (piece.color === "w") {
+        if (piece.type === "p") {
+          game.remove(piece.square);
+          game.put(
+            {
+              type: "q",
+              color: "w",
+            },
+            piece.square,
+          );
+        }
+      }
+    });
+  });
+
+  board.position(game.fen());
+});
 
 if (mode === "ai") {
   stockfish = new Worker("js/stockfish.js");
@@ -146,4 +180,4 @@ const config = {
 };
 board = Chessboard("board", config);
 
-updateStatus();
+afterNext();
