@@ -1,0 +1,24 @@
+@keyframes party {
+  0% {background-color: red;}
+  25% {background-color: orange;}
+  50% {background-color: pink;}
+  75% {background-color: cyan;}
+  100% {background-color: red;}
+}
+
+@keyframes party2 {
+  0% {background-color: pink;}
+  25% {background-color: cyan;}
+  50% {background-color: red;}
+  75% {background-color: green;}
+  100% {background-color: pink;}
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

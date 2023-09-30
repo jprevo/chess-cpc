@@ -4,10 +4,10 @@
   "description": "Stupid Chess game for Canard PC's Make Something Horrible Gamejam",
   "main": "main.js",
   "scripts": {
-    "webpack": "webpack",
+    "compile": "webpack & sass --watch ./scss/app.scss ./css/app.css",
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "premake": "webpack --config webpack.config.prod.js",
+    "premake": "webpack --config webpack.config.prod.js && sass --style=compressed ./scss/app.scss ./css/app.css",
     "make": "electron-forge make"
   },
   "author": "Awake",
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "chess.js": "^1.0.0-beta.6",
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "sass": "^1.68.0"
   }
 }

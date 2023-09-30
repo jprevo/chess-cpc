@@ -1,21 +1,24 @@
 <!doctype html>
-<html>
+<html class="splash">
 <head>
+  <base href="../">
   <meta charset="UTF-8" />
   <meta
           http-equiv="Content-Security-Policy"
           content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'"
   />
   <title>Stupid Chess</title>
-  <link href="../css/app.css" rel="stylesheet" />
+  <link href="css/app.css" rel="stylesheet" />
 </head>
 <body>
-<header>
-  <h1>Stupid Chess</h1>
+  <img src="img/logo.png" class="logo">
+  <h2>Le jeu de stratégie le plus amusant DU MONDE</h2>
 
-  <a href="play.html">Jouer contre l'IA</a>
-  <a href="#">Human vs Humain</a>
+  <a href="html/play.html?mode=ai" class="menu-btn">Jouer contre l'IA</a>
+  <a href="html/play.html?mode=vs" class="menu-btn">Human contre Humain</a>
 
-</header>
+  <footer>
+    <a href="html/credits.html">Crédits</a>
+  </footer>
 </body>
 </html>

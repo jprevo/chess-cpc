@@ -65,8 +65,9 @@ const createWindow = () => {
     },
   });
 
+  mainWindow.setAspectRatio(1200 / 900);
   mainWindow.removeMenu();
-  mainWindow.setResizable(false);
+  mainWindow.setResizable(true);
 
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
