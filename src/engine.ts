@@ -7,6 +7,7 @@ import {
   EngineState,
   GameMode,
   PieceTheme,
+  PlayedCards,
 } from "./types";
 import { BLACK, Chess, QUEEN, Square, WHITE } from "chess.js";
 import { Cards } from "./cards";
@@ -24,7 +25,6 @@ export class Engine {
 
   deck: CardDeck;
   faces: CardFace[] = [];
-  playedCards: Card[] = [];
 
   pieceTheme: PieceTheme = PieceTheme.Wikipedia;
   allowed: Square[] = [];
@@ -93,7 +93,7 @@ export class Engine {
   }
 
   async drawCard(): Promise<void> {
-    const id: string | null = this.deck.getCardId(this.playedCards.length);
+    const id: string | null = this.deck.getNextCardId();
 
     if (!id) {
       return;
@@ -105,9 +105,49 @@ export class Engine {
   }
 
   async playCard(card: Card): Promise<boolean> {
-    this.playedCards.push(card);
+    const success: boolean = await card.play(this);
+    this.deck.addPlayed(card, this.turn, success);
+    this.updateHistory();
 
-    return card.play(this);
+    return success;
+  }
+
+  protected updateHistory(): void {
+    const history: PlayedCards = [...this.deck.history()].reverse();
+    const container: HTMLElement | null = document.getElementById(
+      this._config.historyId as string,
+    );
+
+    if (!container) {
+      return;
+    }
+
+    container.innerHTML = "";
+
+    history.forEach((entry) => {
+      const element: HTMLDivElement = document.createElement("div");
+
+      const title: HTMLHeadingElement = document.createElement("h4");
+      title.textContent = entry.card.name;
+
+      const description: HTMLParagraphElement = document.createElement("p");
+      description.textContent = entry.card.description;
+
+      element.append(title, description);
+      element.classList.add("entry");
+      element.classList.add(entry.color === WHITE ? "white" : "black");
+
+      if (!entry.success) {
+        element.classList.add("error");
+
+        const error: HTMLElement = document.createElement("strong");
+        error.textContent = "Impossible d'appliquer cette carte";
+
+        element.append(error);
+      }
+
+      container.append(element);
+    });
   }
 
   protected afterNext(): void {
@@ -116,7 +156,7 @@ export class Engine {
 
   updateStatus(): void {
     const statusElt: HTMLElement | null = document.getElementById("status");
-    let text = "";
+    let text;
 
     let moveColor = "Blanc";
 

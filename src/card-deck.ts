@@ -1,11 +1,13 @@
-import { CardFace } from "./types";
+import { CardFace, PlayedCards } from "./types";
 import { Engine } from "./engine";
 import { Card } from "./card/card";
 import { Cards } from "./cards";
 import { Util } from "./util";
+import { Color } from "chess.js";
 
 export class CardDeck {
   protected cards: string[] = [];
+  protected played: PlayedCards = [];
 
   public constructor(
     protected deckId: string,
@@ -63,11 +65,22 @@ export class CardDeck {
     }
 
     cards = cards.slice(0, size - 1);
-    Util.shuffle(cards);
 
     this.cards = cards;
 
     return cards;
+  }
+
+  addPlayed(card: Card, color: Color, success: boolean): void {
+    this.played.push({
+      card: card,
+      color: color,
+      success: success,
+    });
+  }
+
+  public history(): PlayedCards {
+    return this.played;
   }
 
   getCardId(position: number): string | null {
@@ -76,6 +89,10 @@ export class CardDeck {
     }
 
     return this.cards[position];
+  }
+
+  getNextCardId(): string | null {
+    return this.getCardId(this.played.length);
   }
 
   protected createCardBack(element: HTMLElement, card: Card) {
@@ -102,7 +119,7 @@ export class CardDeck {
   }
 
   async draw(card: Card): Promise<void> {
-    const position = this.engine.playedCards.length;
+    const position = this.played.length;
     const element: HTMLElement | null = document.getElementById(
       `card-${position.toString()}`,
     );

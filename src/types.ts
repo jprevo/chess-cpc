@@ -1,4 +1,5 @@
 import { Card } from "./card/card";
+import { Color } from "chess.js";
 
 declare global {
   interface Window {
@@ -10,6 +11,7 @@ export interface EngineConfig {
   mode?: GameMode;
   domId?: string;
   deckId?: string;
+  historyId?: string;
 }
 
 export enum EngineState {
@@ -59,10 +61,17 @@ export enum GameMode {
   Vs = "vs",
 }
 
-export const defaultEngineConfig = {
+export type PlayedCards = Array<{
+  card: Card;
+  color: Color;
+  success: boolean;
+}>;
+
+export const defaultEngineConfig: EngineConfig = {
   mode: GameMode.Ai,
   domId: "board",
   deckId: "stack",
+  historyId: "history",
 };
 
 // Type definitions for chessboardjs 0.3

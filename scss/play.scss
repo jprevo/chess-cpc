@@ -5,7 +5,7 @@ $cardDrawSpeed: 0.5s;
 $cardFlipSpeed: 1s;
 
 #board {
-  width: 750px;
+  width: 65%;
   position: relative;
 
   &.party {
@@ -131,5 +131,48 @@ $cardFlipSpeed: 1s;
   img {
     max-width: 100%;
     max-height: 100%;
+  }
+}
+
+#history {
+  position: absolute;
+  bottom: 2%;
+  height: 30%;
+  overflow-y: auto;
+  right: 2%;
+  left: 67%;
+  font-size: 12px;
+
+  .entry {
+    background: #fff;
+    color: #222;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding: 10px;
+
+    &.black {
+      background: #000;
+      color: #eee;
+    }
+  }
+
+  h4 {
+    margin-top: 0;
+    margin-bottom: 3px;
+  }
+
+  p {
+    margin-bottom: 2px;
+    margin-top: 0;
+  }
+
+  span.color {
+    font-size: 10px;
+    font-weight: bold;
+  }
+
+  .entry.error {
+    background: #ff9393 !important;
+    color: #750000 !important;
   }
 }
