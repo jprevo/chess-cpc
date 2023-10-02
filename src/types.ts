@@ -17,6 +17,11 @@ export enum EngineState {
   Play,
 }
 
+export enum PieceTheme {
+  Wikipedia = "wikipedia",
+  Colored = "colored",
+}
+
 export enum CardFace {
   ackboo = "ackboo",
   chat = "chat",

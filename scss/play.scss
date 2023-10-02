@@ -4,9 +4,9 @@ $cardTextColor: black;
 $cardDrawSpeed: 0.5s;
 $cardFlipSpeed: 1s;
 
-
 #board {
   width: 750px;
+  position: relative;
 
   &.party {
     [data-square][class*=' black'] {
@@ -18,11 +18,29 @@ $cardFlipSpeed: 1s;
       background: red;
       animation: party2 5s infinite;
     }
+  }
 
+  &.vomit {
     [data-piece] {
       animation: rotation 3s infinite linear;
     }
   }
+
+  &.ackboo {
+    &::after {
+      position: absolute;
+      background: url("../img/ackboo.jpg");
+      background-size: cover;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      content: "";
+      opacity: 0.35;
+      pointer-events: none;
+    }
+  }
+
 }
 
 .card {

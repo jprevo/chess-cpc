@@ -1,21 +1,21 @@
 import { Card } from "./card";
 import { Engine } from "../engine";
 import { CardLevel } from "../types";
-import { Color, PAWN, QUEEN, Square } from "chess.js";
+import { Color, KNIGHT, PAWN, Square } from "chess.js";
 
-export class QueensCard extends Card {
-  public static readonly id: string = "queens";
+export class KnightCard extends Card {
+  public static readonly id: string = "knight";
 
   get level(): CardLevel {
     return CardLevel.VeryGood;
   }
 
   get name(): string {
-    return "Le Jeu de la Dame";
+    return "Appel de la cavalerie";
   }
 
   get description(): string {
-    return "Un de vos pions a lu le Manifeste Communiste et s'extrait de sa condition pour devenir une reine.";
+    return "Après une formation en maîtrise des chevals, tous vos pions se transforment en Cavaliers.";
   }
 
   async play(engine: Engine): Promise<boolean> {
@@ -46,16 +46,16 @@ export class QueensCard extends Card {
       return false;
     }
 
-    const pawn: Square = pawns[Math.floor(Math.random() * pawns.length)];
-
-    engine.game.remove(pawn);
-    engine.game.put(
-      {
-        type: QUEEN,
-        color: color,
-      },
-      pawn,
-    );
+    for (const pawn of pawns) {
+      engine.game.remove(pawn);
+      engine.game.put(
+        {
+          type: KNIGHT,
+          color: color,
+        },
+        pawn,
+      );
+    }
 
     engine.setPosition(engine.game.fen());
 

@@ -6,6 +6,7 @@ import {
   EngineConfig,
   EngineState,
   GameMode,
+  PieceTheme,
 } from "./types";
 import { BLACK, Chess, QUEEN, WHITE } from "chess.js";
 import { Cards } from "./cards";
@@ -23,6 +24,7 @@ export class Engine {
   deck: CardDeck;
   faces: CardFace[] = [];
   playedCards: Card[] = [];
+  pieceTheme: PieceTheme = PieceTheme.Wikipedia;
 
   public constructor(config: EngineConfig) {
     const engineConfig: EngineConfig = {
@@ -46,6 +48,7 @@ export class Engine {
       onDragStart: this.onDragStart.bind(this),
       onDrop: this.onDrop.bind(this),
       onSnapEnd: this.onSnapEnd.bind(this),
+      pieceTheme: this.getThemeForPiece.bind(this),
     };
 
     this._board = window.Chessboard(engineConfig.domId, boardConfig);
@@ -231,6 +234,15 @@ export class Engine {
 
       return "snapback";
     }
+  }
+
+  getThemeForPiece(piece?: string): string {
+    return `img/chesspieces/${this.pieceTheme}/${piece}.png`;
+  }
+
+  setPieceTheme(theme: PieceTheme) {
+    this.pieceTheme = theme;
+    this.board.resize();
   }
 
   setPosition(fen: string) {
