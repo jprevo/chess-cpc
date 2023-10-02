@@ -61,6 +61,13 @@ export class CardDeck {
     description.textContent = card.description;
 
     back.append(title, description);
+
+    if (card.help !== null) {
+      const help: HTMLElement = document.createElement("small");
+      help.textContent = card.help;
+
+      back.append(help);
+    }
   }
 
   async draw(card: Card): Promise<void> {

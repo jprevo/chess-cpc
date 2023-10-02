@@ -16,5 +16,9 @@ export abstract class Card {
     return CardLevel.Good;
   }
 
+  get help(): string | null {
+    return null;
+  }
+
   abstract play(engine: Engine): Promise<boolean>;
 }

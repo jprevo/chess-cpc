@@ -1,29 +1,29 @@
 import { Card } from "./card";
 import { Engine } from "../engine";
 import { CardLevel } from "../types";
-import { Color, KNIGHT, PAWN, Square } from "chess.js";
+import { Color, KING, Square } from "chess.js";
 import { Util } from "../util";
 
-export class KnightCard extends Card {
-  public static readonly id: string = "knight";
+export class LossCard extends Card {
+  public static readonly id: string = "loss";
 
   get level(): CardLevel {
-    return CardLevel.VeryGood;
+    return CardLevel.VeryBad;
   }
 
   get name(): string {
-    return "Appel de la cavalerie";
+    return "Besoin de changement";
   }
 
   get description(): string {
-    return "Après avoir utilisé leurs crédits CPF pour une formation d'équitation, 3 de vos pions de transforment en cavaliers.";
+    return "Trois de vos pièces en on marre des échecs et vont jouer au go. Vous perdrez 3 pièces au hasard.";
   }
 
   async play(engine: Engine): Promise<boolean> {
     const pieces = engine.game.board();
     const color: Color = engine.turn as Color;
 
-    const pawns: Square[] = [];
+    const toRemove: Square[] = [];
 
     pieces.forEach((line) => {
       if (!line) {
@@ -36,30 +36,23 @@ export class KnightCard extends Card {
         }
 
         if (piece.color === color) {
-          if (piece.type === PAWN) {
-            pawns.push(piece.square);
+          if (piece.type !== KING) {
+            toRemove.push(piece.square);
           }
         }
       });
     });
 
-    if (!pawns.length) {
+    if (!toRemove.length) {
       return false;
     }
 
-    Util.shuffle(pawns);
+    Util.shuffle(toRemove);
 
     let n = 0;
 
-    for (const pawn of pawns) {
-      engine.game.remove(pawn);
-      engine.game.put(
-        {
-          type: KNIGHT,
-          color: color,
-        },
-        pawn,
-      );
+    for (const remove of toRemove) {
+      engine.game.remove(remove);
 
       if (++n >= 3) {
         break;

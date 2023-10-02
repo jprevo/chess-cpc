@@ -8,10 +8,11 @@ import {
   GameMode,
   PieceTheme,
 } from "./types";
-import { BLACK, Chess, QUEEN, WHITE } from "chess.js";
+import { BLACK, Chess, QUEEN, Square, WHITE } from "chess.js";
 import { Cards } from "./cards";
 import { Card } from "./card/card";
 import { CardDeck } from "./card-deck";
+import { Util } from "./util";
 
 export class Engine {
   protected _config: EngineConfig;
@@ -24,7 +25,9 @@ export class Engine {
   deck: CardDeck;
   faces: CardFace[] = [];
   playedCards: Card[] = [];
+
   pieceTheme: PieceTheme = PieceTheme.Wikipedia;
+  allowed: Square[] = [];
 
   public constructor(config: EngineConfig) {
     const engineConfig: EngineConfig = {
@@ -161,6 +164,10 @@ export class Engine {
   }
 
   protected playAi(): void {
+    if (this.allowed) {
+      return this.playRandomAi();
+    }
+
     if (!this.fish) {
       return this.playRandomAi();
     }
@@ -178,7 +185,15 @@ export class Engine {
   }
 
   protected playRandomAi(): void {
-    const moves = this.game.moves();
+    let moves = this.game.moves();
+
+    if (this.allowed) {
+      Util.shuffle(this.allowed);
+
+      moves = this.game.moves({
+        square: this.allowed[0],
+      });
+    }
 
     if (!moves.length) {
       alert("Impossible de trouver le coup suivant.");
@@ -223,6 +238,12 @@ export class Engine {
       return "snapback";
     }
 
+    if (this.allowed.length > 0) {
+      if (!this.allowed.includes(source as Square)) {
+        return "snapback";
+      }
+    }
+
     try {
       this.game.move({
         from: source,
@@ -250,6 +271,10 @@ export class Engine {
     this.board.position(fen, false);
   }
 
+  setAllowed(allowed: Square[]) {
+    this.allowed = allowed;
+  }
+
   protected onSnapEnd(): void {
     this.onMovePlayed();
   }
@@ -259,6 +284,7 @@ export class Engine {
       return;
     }
 
+    this.allowed = [];
     this.board.position(this.game.fen());
     this._state = EngineState.Draw;
     this.next();

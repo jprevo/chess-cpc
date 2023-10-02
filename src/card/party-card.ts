@@ -21,7 +21,7 @@ export class PartyCard extends Card {
   }
 
   async play(engine: Engine): Promise<boolean> {
-    const board = engine.boardElement;
+    const board: HTMLElement | null = engine.boardElement;
 
     if (!board) {
       return false;

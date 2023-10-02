@@ -54,8 +54,8 @@ export type CardsIndex = {
 };
 
 export enum GameMode {
-  Ai,
-  Vs,
+  Ai = "ai",
+  Vs = "vs",
 }
 
 export const defaultEngineConfig = {

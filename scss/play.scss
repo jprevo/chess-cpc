@@ -26,6 +26,10 @@ $cardFlipSpeed: 1s;
     }
   }
 
+  &.angle {
+    transform: rotate(90deg);
+  }
+
   &.ackboo {
     &::after {
       position: absolute;
@@ -116,6 +120,12 @@ $cardFlipSpeed: 1s;
     font-size: 10px;
     margin: 0 15px 0 15px;
     color: $cardTextColor;
+  }
+
+  small {
+    margin: 10px 15px 0 15px;
+    font-size: 8px;
+    color: grey;
   }
 
   img {
