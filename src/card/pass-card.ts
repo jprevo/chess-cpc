@@ -20,8 +20,11 @@ export class PassCard extends Card {
 
   async play(engine: Engine): Promise<boolean> {
     const fen: string = engine.game.fen();
+
     const parts: string[] = fen.split(" ");
     parts[1] = engine.turn === BLACK ? WHITE : BLACK;
+    parts[3] = "-"; // en passant flag
+
     const passedFen: string = parts.join(" ");
 
     engine.setPosition(passedFen);
