@@ -17,9 +17,12 @@ import { ForceKingCard } from "./card/force/force-king-card";
 import { PassCard } from "./card/pass-card";
 import { PawnCard } from "./card/pawn-card";
 import { RookCard } from "./card/rook-card";
+import { RandomCard } from "./card/random-card";
+import { ExitCard } from "./card/exit-card";
+import { AllBlacksCard } from "./card/all-blacks-card";
 
 export const Cards: CardsIndex = {
-  /*[PartyCard.id]: PartyCard,
+  [PartyCard.id]: PartyCard,
   [QueensCard.id]: QueensCard,
   [KnightCard.id]: KnightCard,
   [ReverseCard.id]: ReverseCard,
@@ -37,6 +40,9 @@ export const Cards: CardsIndex = {
   [PassCard.id]: PassCard,
   [ForcePawnCard.id]: ForcePawnCard,
   [ForceKnightCard.id]: ForceKnightCard,
-  [PawnCard.id]: PawnCard,*/
+  [PawnCard.id]: PawnCard,
   [RookCard.id]: RookCard,
+  [RandomCard.id]: RandomCard,
+  [ExitCard.id]: ExitCard,
+  [AllBlacksCard.id]: AllBlacksCard,
 };

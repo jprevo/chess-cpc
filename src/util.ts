@@ -1,3 +1,5 @@
+import { BLACK, WHITE } from "chess.js";
+
 export class Util {
   public static shuffle<T>(array: T[]): T[] {
     let currentIndex = array.length,
@@ -13,5 +15,13 @@ export class Util {
     }
 
     return array;
+  }
+
+  public static setTurn(fen: string, turn: "b" | "w"): string {
+    const parts: string[] = fen.split(" ");
+    parts[1] = turn;
+    parts[3] = "-"; // en passant flag
+
+    return parts.join(" ");
   }
 }

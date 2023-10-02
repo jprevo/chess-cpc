@@ -20,6 +20,7 @@ export enum EngineState {
 export enum PieceTheme {
   Wikipedia = "wikipedia",
   Colored = "colored",
+  AllBlacks = "all-blacks",
 }
 
 export enum CardFace {

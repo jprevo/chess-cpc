@@ -2,8 +2,8 @@ import { Card } from "./card";
 import { Engine } from "../engine";
 import { CardLevel, PieceTheme } from "../types";
 
-export class ColoredCard extends Card {
-  public static readonly id: string = "colored";
+export class AllBlacksCard extends Card {
+  public static readonly id: string = "all-blacks";
   public static readonly RemoveAfterDelay = 60000;
 
   get level(): CardLevel {
@@ -11,21 +11,21 @@ export class ColoredCard extends Card {
   }
 
   get name(): string {
-    return "Non au manichéisme";
+    return "Voyage en Nouvelle Zélande";
   }
 
   get description(): string {
-    return "Marre de tout voir en blanc et noir ? Mode coloré pendant 60 secondes.";
+    return "La rédac se prend d'affection pour les All Blacks, et toutes les pièces deviennent noires pendant 60 secondes.";
   }
 
   async play(engine: Engine): Promise<boolean> {
-    engine.setPieceTheme(PieceTheme.Colored);
+    engine.setPieceTheme(PieceTheme.AllBlacks);
 
     setTimeout(() => {
-      if (engine.pieceTheme === PieceTheme.Colored) {
+      if (engine.pieceTheme === PieceTheme.AllBlacks) {
         engine.setPieceTheme(PieceTheme.Wikipedia);
       }
-    }, ColoredCard.RemoveAfterDelay);
+    }, AllBlacksCard.RemoveAfterDelay);
 
     return true;
   }

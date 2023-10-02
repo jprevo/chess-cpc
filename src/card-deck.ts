@@ -1,8 +1,12 @@
 import { CardFace } from "./types";
 import { Engine } from "./engine";
 import { Card } from "./card/card";
+import { Cards } from "./cards";
+import { Util } from "./util";
 
 export class CardDeck {
+  protected cards: string[] = [];
+
   public constructor(
     protected deckId: string,
     protected engine: Engine,
@@ -45,6 +49,33 @@ export class CardDeck {
       card.append(content);
       stack.append(card);
     }
+  }
+
+  build(size = 50): string[] {
+    const getAllCards = () => {
+      return Util.shuffle(Object.keys(Cards));
+    };
+
+    let cards: string[] = getAllCards();
+
+    while (cards.length < size) {
+      cards.push(...getAllCards());
+    }
+
+    cards = cards.slice(0, size - 1);
+    Util.shuffle(cards);
+
+    this.cards = cards;
+
+    return cards;
+  }
+
+  getCardId(position: number): string | null {
+    if (position >= this.cards.length) {
+      return null;
+    }
+
+    return this.cards[position];
   }
 
   protected createCardBack(element: HTMLElement, card: Card) {

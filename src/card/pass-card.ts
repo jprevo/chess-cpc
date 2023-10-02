@@ -2,6 +2,7 @@ import { Card } from "./card";
 import { Engine } from "../engine";
 import { CardLevel } from "../types";
 import { BLACK, WHITE } from "chess.js";
+import { Util } from "../util";
 
 export class PassCard extends Card {
   public static readonly id: string = "pass";
@@ -19,13 +20,10 @@ export class PassCard extends Card {
   }
 
   async play(engine: Engine): Promise<boolean> {
-    const fen: string = engine.game.fen();
-
-    const parts: string[] = fen.split(" ");
-    parts[1] = engine.turn === BLACK ? WHITE : BLACK;
-    parts[3] = "-"; // en passant flag
-
-    const passedFen: string = parts.join(" ");
+    const passedFen: string = Util.setTurn(
+      engine.game.fen(),
+      engine.turn === BLACK ? WHITE : BLACK,
+    );
 
     engine.setPosition(passedFen);
 

@@ -57,6 +57,7 @@ export class Engine {
     this._board = window.Chessboard(engineConfig.domId, boardConfig);
 
     this.deck = new CardDeck(engineConfig.deckId as string, this);
+    this.deck.build(50);
 
     setTimeout(() => {
       return this.next();
@@ -92,8 +93,12 @@ export class Engine {
   }
 
   async drawCard(): Promise<void> {
-    const ids: string[] = Object.keys(Cards);
-    const id: string = ids[Math.floor(Math.random() * ids.length)];
+    const id: string | null = this.deck.getCardId(this.playedCards.length);
+
+    if (!id) {
+      return;
+    }
+
     const card: Card = new Cards[id]();
 
     return this.deck.draw(card);
@@ -290,7 +295,7 @@ export class Engine {
     this.next();
   }
 
-  get turn(): string {
+  get turn(): "b" | "w" {
     return this.game.turn();
   }
 
