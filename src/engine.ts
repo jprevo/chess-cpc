@@ -22,10 +22,10 @@ export class Engine {
   protected _game: Chess;
   protected _mode: GameMode;
   protected _state: EngineState = EngineState.Draw;
+  protected _isAiThinking: boolean = false;
 
   deck: CardDeck;
   faces: CardFace[] = [];
-
   pieceTheme: PieceTheme = PieceTheme.Wikipedia;
   allowed: Square[] = [];
 
@@ -65,6 +65,8 @@ export class Engine {
   }
 
   async next(): Promise<boolean> {
+    this.updateStatus();
+
     if (this.game.isGameOver()) {
       this.afterNext();
 
@@ -74,8 +76,6 @@ export class Engine {
     if (this.mode === GameMode.Ai) {
       if (this.game.turn() === BLACK && this._state === EngineState.Play) {
         this.playAi();
-        this._state = EngineState.Draw;
-        this.afterNext();
 
         return true;
       }
@@ -169,10 +169,18 @@ export class Engine {
     } else if (this.game.isDraw()) {
       text = "Partie terminée, match nul.";
     } else {
-      text = `À ${moveColor} de jouer`;
+      if (this._state === EngineState.Draw) {
+        text = `${moveColor} pioche une carte...`;
+      } else {
+        text = `À ${moveColor} de jouer.`;
 
-      if (this.game.isCheck()) {
-        text += `, ${moveColor} est en échec.`;
+        if (this.game.isCheck()) {
+          text += ` ${moveColor} est en échec.`;
+        }
+
+        if (this._isAiThinking) {
+          text += ` L'IA réfléchie...`;
+        }
       }
     }
 
@@ -202,6 +210,8 @@ export class Engine {
           return this.playRandomAi();
         }
 
+        this._isAiThinking = false;
+
         this.game.move(parts[1]);
         this.onMovePlayed();
       }
@@ -209,7 +219,9 @@ export class Engine {
   }
 
   protected playAi(): void {
-    if (this.allowed) {
+    this.updateStatus();
+
+    if (this.allowed.length > 0) {
       return this.playRandomAi();
     }
 
@@ -225,12 +237,17 @@ export class Engine {
         return;
       }
 
-      this.fish.postMessage("go depth 5");
+      this._isAiThinking = true;
+      this.updateStatus();
+
+      this.fish.postMessage("go depth 16");
     }, 250);
   }
 
   protected playRandomAi(): void {
     let moves = this.game.moves();
+
+    console.warn("Playing random AI move.");
 
     if (this.allowed) {
       Util.shuffle(this.allowed);
@@ -245,10 +262,16 @@ export class Engine {
       return;
     }
 
+    this._isAiThinking = false;
+
+    console.log("Random AI move");
+
     const move = moves[Math.floor(Math.random() * moves.length)];
     this.game.move(move);
 
-    this.onMovePlayed();
+    setTimeout(() => {
+      this.onMovePlayed();
+    }, 800);
   }
 
   protected onDragStart(source?: string, piece?: string) {
@@ -272,6 +295,10 @@ export class Engine {
     ) {
       return false;
     }
+  }
+
+  resize() {
+    this.board.resize();
   }
 
   protected onDrop(source?: string, target?: string): string | void {
@@ -331,8 +358,22 @@ export class Engine {
 
     this.allowed = [];
     this.board.position(this.game.fen());
-    this._state = EngineState.Draw;
-    this.next();
+
+    const next = () => {
+      this._state = EngineState.Draw;
+      return this.next();
+    };
+
+    if (
+      this._state === EngineState.Play &&
+      this.turn === WHITE &&
+      this.mode === GameMode.Ai
+    ) {
+      setTimeout(() => next(), 2000);
+      return;
+    }
+
+    next();
   }
 
   get turn(): "b" | "w" {

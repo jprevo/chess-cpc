@@ -4,9 +4,32 @@ $cardTextColor: black;
 $cardDrawSpeed: 0.5s;
 $cardFlipSpeed: 1s;
 
+$padding: 2%;
+$boardWidth: 74%;
+$sidebarWidth: 100% - $boardWidth;
+
+html.play {
+  height: 100%;
+  width: 100%;
+
+  body{
+    height: 100%;
+    width: 100%;
+
+    background: url("../img/bg2.jpg") no-repeat;
+    background-size: cover;
+  }
+}
+
 #board {
-  width: 65%;
+  width: $boardWidth;
+  padding: $padding;
   position: relative;
+  margin-right: auto;
+
+  div[class^='chessboard'], div[class*=' chessboard']{
+    position: relative;
+  }
 
   &.party {
     [data-square][class*=' black'] {
@@ -31,29 +54,66 @@ $cardFlipSpeed: 1s;
   }
 
   &.ackboo {
-    &::after {
-      position: absolute;
-      background: url("../img/ackboo.jpg");
-      background-size: cover;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      content: "";
-      opacity: 0.35;
-      pointer-events: none;
+    div[class^='chessboard'], div[class*=' chessboard']{
+      &::after {
+        position: absolute;
+        background: url("../img/ackboo.jpg");
+        background-size: cover;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        content: "";
+        opacity: 0.35;
+        pointer-events: none;
+      }
     }
   }
+}
 
+.sidebar {
+  width: $sidebarWidth;
+  padding: $padding $padding $padding 0;
+
+  .menu {
+    position: absolute;
+    right: $padding;
+    padding-top: 1%;
+
+    a {
+      display: inline-block;
+      margin-bottom: 8px;
+      box-shadow: inset 0 1px 0 0 #caefab;
+      background: #77d42a linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
+      border-radius: 42px;
+      border: 1px solid #268a16;
+      cursor: pointer;
+      color: #306108;
+      font-family: Arial, sans-serif;
+      font-size: 1.6vh;
+      font-weight: bold;
+      padding: 4px 12px;
+      text-decoration: none;
+      text-shadow: 0 1px 0 #aade7c;
+
+      &:hover {
+        background: #5cb811 linear-gradient(to bottom, #5cb811 5%, #77d42a 100%);
+      }
+
+      &:active {
+        position: relative;
+        top: 1px;
+      }
+    }
+  }
 }
 
 .card {
-  width: 200px;
-  height: 200px;
+  width: 16%;
+  top: 25%;
+  right: 5%;
+  aspect-ratio: 1;
   position: absolute;
-  top: 200px;
-  right: 20px;
-  overflow: hidden;
   transition: right $cardDrawSpeed ease-out,
               top $cardDrawSpeed ease-out,
               transform $cardDrawSpeed ease-out,
@@ -67,9 +127,13 @@ $cardFlipSpeed: 1s;
   }
 
   &.drawing {
-    right: 500px;
-    top: 250px;
+    right: 40%;
+    top: 15%;
     transform: scale(2);
+
+    &.w-turn {
+      top: 65%;
+    }
   }
 
   .card-content {
@@ -94,14 +158,14 @@ $cardFlipSpeed: 1s;
     width: 100%;
     background: white;
     backface-visibility: hidden;
-  }
-
-  .front {
     border: 5px solid white;
+    border-radius: 1.3vh;
+    overflow: hidden;
   }
 
   .back {
     background: white url($cardBg) no-repeat;
+    border-radius: 1.3vh;
     background-size: cover;
     color: black;
     transform: rotateY(180deg);
@@ -111,37 +175,42 @@ $cardFlipSpeed: 1s;
   }
 
   h3 {
-    font-size: 15px;
+    font-size: 1.5vh;
     margin: 0 15px 15px 15px;
     color: $cardTitleColor;
   }
 
   p {
-    font-size: 10px;
+    font-size: 1.2vh;
     margin: 0 15px 0 15px;
     color: $cardTextColor;
   }
 
   small {
     margin: 10px 15px 0 15px;
-    font-size: 8px;
+    font-size: 0.9vh;
     color: grey;
   }
 
   img {
     max-width: 100%;
     max-height: 100%;
+    width: 100%;
+    height: 100%;
   }
 }
 
 #history {
   position: absolute;
-  bottom: 2%;
-  height: 30%;
+  padding: $padding $padding $padding 0;
+  bottom: 0;
+  right: 0;
+  height: 40%;
+  width: $sidebarWidth;
   overflow-y: auto;
-  right: 2%;
-  left: 67%;
-  font-size: 12px;
+  font-size: 1.3vh;
+  //noinspection CssInvalidPropertyValue
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
 
   .entry {
     background: #fff;
@@ -171,8 +240,17 @@ $cardFlipSpeed: 1s;
     font-weight: bold;
   }
 
-  .entry.error {
-    background: #ff9393 !important;
-    color: #750000 !important;
+  .entry.error strong {
+    color: #be1616;
   }
+}
+
+#status {
+  font-size: 2vh;
+  padding: 15px;
+  font-weight: bold;
+  background: #fff;
+  color: #555;
+  border-radius: 8px;
+  box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.3);
 }

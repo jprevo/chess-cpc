@@ -150,6 +150,7 @@ export class CardDeck {
         once: true,
       });
 
+      element.classList.add(this.engine.turn + "-turn");
       element.classList.add("drawing");
 
       setTimeout(() => {

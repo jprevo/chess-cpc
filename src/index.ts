@@ -12,4 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     domId: "board",
     mode: mode,
   });
+
+  window.addEventListener("resize", () => engine.resize());
 });
