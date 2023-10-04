@@ -17,7 +17,7 @@ export class PartyCard extends Card {
   }
 
   get description(): string {
-    return "Grosse ambiance à la salle des fêtes de Meulin ce soir ! Mode boom pendant 60 secondes.";
+    return "Grosse ambiance à la salle des fêtes de Montargis ce soir ! Mode boom pendant 60 secondes.";
   }
 
   async play(engine: Engine): Promise<boolean> {

@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, shell } = require("electron");
 const path = require("node:path");
 
 // Squirrel is auto update stuff
@@ -58,17 +58,24 @@ function handleSquirrelEvent() {
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 1600,
     height: 900,
     maximizable: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
+    icon: "/img/icon.png",
   });
 
-  mainWindow.setAspectRatio(1200 / 900);
+  mainWindow.setAspectRatio(1600 / 900);
   mainWindow.removeMenu();
   mainWindow.setResizable(true);
+
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+
+    return { action: "deny" };
+  });
 
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();

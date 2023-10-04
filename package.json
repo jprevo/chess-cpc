@@ -1,6 +1,6 @@
 {
-  "name": "chess-cpc",
-  "version": "1.0.0",
+  "name": "Crazy Party Chess",
+  "version": "1.0.2",
   "description": "Stupid Chess game for Canard PC's Make Something Horrible Gamejam",
   "main": "main.js",
   "scripts": {
