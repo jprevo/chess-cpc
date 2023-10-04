@@ -16,7 +16,7 @@ export class LossCard extends Card {
   }
 
   get description(): string {
-    return "Trois de vos pièces en on marre des échecs et vont jouer au go. Vous perdrez 3 pièces au hasard.";
+    return "Trois de vos pièces en ont marre des échecs et vont jouer au go. Vous perdrez 3 pièces au hasard.";
   }
 
   async play(engine: Engine): Promise<boolean> {

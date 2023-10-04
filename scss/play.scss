@@ -1,8 +1,9 @@
-$cardBg: "../img/card/bg2.jpg";
+$cardBg: "../img/card/bg3.jpg";
 $cardTitleColor: black;
 $cardTextColor: black;
 $cardDrawSpeed: 0.5s;
 $cardFlipSpeed: 1s;
+$cardPadding: 22px;
 
 $leftSideWidth: 18%;
 $padding: 2%;
@@ -182,19 +183,19 @@ html.play {
   }
 
   h3 {
-    font-size: 1.5vh;
-    margin: 0 15px 15px 15px;
+    font-size: 1.9vh;
+    margin: 0 $cardPadding $cardPadding $cardPadding;
     color: $cardTitleColor;
   }
 
   p {
-    font-size: 1.2vh;
-    margin: 0 15px 0 15px;
+    font-size: 1.5vh;
+    margin: 0 $cardPadding 0 $cardPadding;
     color: $cardTextColor;
   }
 
   small {
-    margin: 10px 15px 0 15px;
+    margin: 1.1vh $cardPadding 0 $cardPadding;
     font-size: 0.9vh;
     color: grey;
   }
