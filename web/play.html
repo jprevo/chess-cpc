@@ -1,0 +1,40 @@
+<!doctype html>
+<html class="play">
+<head>
+    <base href=".">
+    <meta charset="UTF-8" />
+    <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'"
+    />
+    <title>Crazy Party Chess</title>
+    <link href="css/chessboard-1.0.0.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+</header>
+
+<main>
+    <div id="board"></div>
+    <div class="sidebar">
+        <div id="status"></div>
+
+        <div class="menu">
+            <a href="javascript:document.location.reload()">Rejouer</a>
+            <a href="index.html">Retour</a>
+        </div>
+
+        <div id="stack">
+
+        </div>
+
+        <div id="history"></div>
+    </div>
+</main>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/chessboard-1.0.0.js"></script>
+<script src="dist/app.js"></script>
+</body>
+</html>

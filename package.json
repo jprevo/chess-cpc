@@ -8,7 +8,8 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "premake": "webpack --config webpack.config.prod.js && sass --style=compressed ./scss/app.scss ./css/app.css",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "web": "sass --style=compressed ./scss/app.scss ./css/app.css && webpack --config webpack.config.web.js"
   },
   "author": "Awake",
   "license": "UNLICENSED",
@@ -19,6 +20,7 @@
     "@electron-forge/maker-squirrel": "^6.4.2",
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
+    "copy-webpack-plugin": "^11.0.0",
     "electron": "^26.2.4",
     "prettier": "3.0.3",
     "ts-loader": "^9.4.4",
